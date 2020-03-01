@@ -1,0 +1,28 @@
+enum Category {
+  Shirts
+  Jeans
+  Jackets
+  Sweaters
+  Accessories
+}
+type Product {
+  id: Int!
+  Category: [Category!]
+  Name: String!
+  Price: Float
+  Image: String
+}
+type Query {
+  productList: [Product!]!
+}
+
+input ProductInputs {
+  Category: [Category!]
+  name: String!
+  price: Float
+  image: String
+}
+
+type Mutation {
+  productAdd(product: ProductInputs!): Product!
+}
