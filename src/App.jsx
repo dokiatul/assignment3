@@ -124,7 +124,7 @@ class ProductList extends React.Component {
     const response = await fetch('/graphql', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json'},
-      body: JSON.stringify({ query, variables: { newProduct } }})
+      body: JSON.stringify({ query, variables: { newProduct } })
     });
     this.loadData();
   }
