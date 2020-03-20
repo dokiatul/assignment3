@@ -9,13 +9,13 @@ const resolvers = {
     productList,
   },
   Mutation: {
-    productAdd,
+    addProduct,
   },
 };
 
 const productsDB = [];
 
-function productAdd(_, { product }) {
+function addProduct(_, { product }) {
   product.id = productsDB.length + 1;
   productsDB.push(product);
   return product;

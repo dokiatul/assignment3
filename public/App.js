@@ -33,9 +33,10 @@ class ProductAdd extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     var form = document.forms.productAdd;
+    var price = form.price.value.replace('$', '');
     this.props.createProduct({
       name: form.productName.value,
-      price: form.price.value.replace('$', ''),
+      price: price > 0 ? price : 0,
       category: form.category.value,
       image: form.imageURL.value
     });
@@ -81,8 +82,6 @@ class ProductAdd extends React.Component {
 
 }
 
-const products = [];
-
 class ProductList extends React.Component {
   constructor() {
     super();
@@ -99,7 +98,7 @@ class ProductList extends React.Component {
   async loadData() {
     const query = `query {
       productList {
-        id Category Name Price Image
+        id category name price image
       }
     }`;
     const response = await fetch('/graphql', {
@@ -115,20 +114,27 @@ class ProductList extends React.Component {
     this.setState({
       products: result.data.productList
     });
-    setTimeout(() => {
-      this.setState({
-        products: products
-      });
-    }, 500);
   }
 
-  createProduct(newProduct) {
-    const newProducts = this.state.products.slice();
-    newProduct.id = this.state.products.length + 1;
-    newProducts.push(newProduct);
-    this.setState({
-      products: newProducts
+  async createProduct(product) {
+    const query = `mutation addProduct($product: ProductInputs!) {
+      addProduct(product: $product) {
+        id
+      }
+    }`;
+    const response = await fetch('/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        query,
+        variables: {
+          product
+        }
+      })
     });
+    this.loadData();
   }
 
   render() {
